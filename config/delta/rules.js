@@ -44,5 +44,37 @@ export default [
       foldEffectiveChanges: false,
       ignoreFromSelf: false,
     },
+  },
+  {
+    match: {
+      // we expect the full body to be sent in this case
+      object: { value: "http://mu.semte.ch/vocabularies/cache/Clear" },
+    },
+    callback: {
+      url: "http://push-update-cache-monitor/delta",
+      method: "POST",
+    },
+    options: {
+      resourceFormat: "v0.0.1",
+      gracePeriod: 100,
+      foldEffectiveChanges: false,
+      ignoreFromSelf: false,
+    },
+  },
+  {
+    match: {
+      // we expect the full body to be sent in this case
+      object: { value: "http://mu.semte.ch/vocabularies/push/Tab" },
+    },
+    callback: {
+      url: "http://push-update-cache-monitor/delta",
+      method: "POST",
+    },
+    options: {
+      resourceFormat: "v0.0.1",
+      gracePeriod: 100,
+      foldEffectiveChanges: false,
+      ignoreFromSelf: false,
+    },
   }
 ];
