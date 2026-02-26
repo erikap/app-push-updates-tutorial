@@ -23,6 +23,10 @@ defmodule Dispatcher do
     forward conn, path, "http://cache/tasks/"
   end
 
+  match "/polling/*path", @json do
+    forward conn, path, "http://polling-push-update/"
+  end
+
   match "/*path", %{ accept: %{ html: true }, layer: :fallback } do
     forward conn, [], "http://frontend/index.html"
   end

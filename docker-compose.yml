@@ -51,6 +51,12 @@ services:
       - "logging=true"
     logging: *default-logging
 
+  # push updates
+  polling-push-update:
+    image: semtech/polling-push-updates
+    environment:
+      DEFAULT_MU_AUTH_SCOPE: "http://services.semantic.works/polling-push-updates"
+
   delta-notifier:
     image: semtech/mu-delta-notifier:0.4.0
     volumes:

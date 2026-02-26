@@ -41,6 +41,7 @@
   ;; Custom prefix URIs here, prefix casing is ignored
   :rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   :dct "http://purl.org/dc/terms/"
+  :push "http://mu.semte.ch/vocabularies/push/"
   )
 
 
@@ -72,6 +73,13 @@
    -> "dct:title"
    -> "ext:status"))
 
+(define-graph tab-ids ("http://mu.semte.ch/graphs/tab-ids" :sparql nil)
+  ("push:Tab"
+   -> "push:session"
+   -> "mu:uuid"
+   -> "rdf:type"
+   -> "rdf:label"))
+
 ;;;;;;;;;;;;;
 ;; User roles
 
@@ -84,3 +92,8 @@
 (grant (read write)
        :to (messages tasks)
        :for "public")
+
+(with-scope "service:polling-push-updates"
+  (grant (write)
+         :to tab-ids
+         :for "public"))
