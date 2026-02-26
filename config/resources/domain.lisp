@@ -6,21 +6,22 @@
 (setf *cache-model-properties-p* t)
 (setf mu-support::*use-custom-boolean-type-p* nil)
 (setq *cache-count-queries-p* t)
-(setf sparql:*query-log-types* nil) ;; hint: use app-http-logger for logging queries instead, all is '(:default :update-group :update :query :ask)
+(setf sparql:*query-log-types* nil)
 
+(define-resource message ()
+  :class (s-prefix "ext:Message")
+  :properties `((:sender :string ,(s-prefix "ext:sender"))
+                (:content :string ,(s-prefix "ext:content"))
+                (:sent-at :datetime ,(s-prefix "ext:sentAt")))
+  :resource-base (s-url "http://mu.semte.ch/messages/")
+  :on-path "messages")
 
-;; example
-;; (define-resource dataset ()
-;;   :class (s-prefix "dcat:Dataset")
-;;   :properties `((:title :string ,(s-prefix "dct:title"))
-;;                 (:description :string ,(s-prefix "dct:description")))
-;;   :has-one `((catalog :via ,(s-prefix "dcat:dataset")
-;;                       :inverse t
-;;                       :as "catalog"))
-;;   :has-many `((theme :via ,(s-prefix "dcat:theme")
-;;                      :as "themes"))
-;;   :resource-base (s-url "http://webcat.tmp.semte.ch/datasets/")
-;;   :on-path "datasets")
+(define-resource task ()
+  :class (s-prefix "ext:Task")
+  :properties `((:title :string ,(s-prefix "dct:title"))
+                (:status :string ,(s-prefix "ext:status")))
+  :features '(include-uri)
+  :resource-base (s-url "http://mu.semte.ch/tasks/")
+  :on-path "tasks")
 
-;; reading in the domain.json
 (read-domain-file "domain.json")

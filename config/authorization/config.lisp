@@ -9,11 +9,11 @@
 ;;;;;;;;;;;;;;;;;
 ;;; configuration
 (in-package :client)
-(setf *log-sparql-query-roundtrip* nil) ; change nil to t for logging requests to virtuoso (and the response)
+(setf *log-sparql-query-roundtrip* t) ; change nil to t for logging requests to virtuoso (and the response)
 (setf *backend* "http://triplestore:8890/sparql")
 
 (in-package :server)
-(setf *log-incoming-requests-p* nil) ; change nil to t for logging all incoming requests
+(setf *log-incoming-requests-p* t) ; change nil to t for logging all incoming requests
 
 ;;;;;;;;;;;;;;;;
 ;;; prefix types
@@ -37,7 +37,10 @@
   :mu "http://mu.semte.ch/vocabularies/core/"
   :session "http://mu.semte.ch/vocabularies/session/"
   :ext "http://mu.semte.ch/vocabularies/ext/"
+  :service "http://services.semantic.works/"
   ;; Custom prefix URIs here, prefix casing is ignored
+  :rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  :dct "http://purl.org/dc/terms/"
   )
 
 
@@ -54,34 +57,30 @@
   (_ -> _)) ; public allows ANY TYPE -> ANY PREDICATE in the direction
             ; of the arrow
 
-;; Example:
-;; (define-graph company ("http://mu.semte.ch/graphs/companies/")
-;;   ("foaf:OnlineAccount"
-;;    -> "foaf:accountName"
-;;    -> "foaf:accountServiceHomepage")
-;;   ("foaf:Group"
-;;    -> "foaf:name"
-;;    -> "foaf:member"))
+(define-graph messages ("http://mu.semte.ch/graphs/messages")
+  ("ext:Message"
+   -> "rdf:type"
+   -> "mu:uuid"
+   -> "ext:sender"
+   -> "ext:content"
+   -> "ext:sentAt"))
 
+(define-graph tasks ("http://mu.semte.ch/graphs/tasks")
+  ("ext:Task"
+   -> "rdf:type"
+   -> "mu:uuid"
+   -> "dct:title"
+   -> "ext:status"))
 
 ;;;;;;;;;;;;;
 ;; User roles
 
 (supply-allowed-group "public")
 
-(grant (read write)
+(grant (read)
        :to-graph public
        :for-allowed-group "public")
 
-;; example:
-
-;; (supply-allowed-group "company"
-;;   :query "PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
-;;           SELECT DISTINCT ?uuid WHERE {
-;;             <SESSION_ID ext:belongsToCompany/mu:uuid ?uuid
-;;           }"
-;;   :parameters ("uuid"))
-
-;; (grant (read write)
-;;        :to company
-;;        :for "company")
+(grant (read write)
+       :to (messages tasks)
+       :for "public")

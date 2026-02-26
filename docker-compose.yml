@@ -10,12 +10,13 @@ services:
     image: semtech/mu-identifier:1.11.0
     environment:
       SESSION_COOKIE_SECURE: "on"
+      DEFAULT_MU_AUTH_ALLOWED_GROUPS_HEADER: '[{"variables":[],"name":"public"}]'
     labels:
       - "logging=true"
     logging: *default-logging
 
   dispatcher:
-    image: semtech/mu-dispatcher:2.1.0
+    image: semtech/mu-dispatcher:2.1.0-beta.2
     volumes:
       - ./config/dispatcher:/config
     labels:
@@ -27,6 +28,13 @@ services:
     image: semtech/mu-cl-resources:1.27.2
     volumes:
       - ./config/resources:/config
+    labels:
+      - "logging=true"
+    logging: *default-logging
+  cache:
+    image: semtech/mu-cache:2.1.0
+    links:
+      - resource:backend
     labels:
       - "logging=true"
     logging: *default-logging
