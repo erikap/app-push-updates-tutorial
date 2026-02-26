@@ -35,6 +35,8 @@ services:
     image: semtech/mu-cache:2.1.0
     links:
       - resource:backend
+    environment:
+      CACHE_CLEAR_NOTIFY_PATH_REGEX: "^/messages\\?sort="
     labels:
       - "logging=true"
     logging: *default-logging
