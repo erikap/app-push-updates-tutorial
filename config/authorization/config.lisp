@@ -42,6 +42,7 @@
   :rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   :dct "http://purl.org/dc/terms/"
   :push "http://mu.semte.ch/vocabularies/push/"
+  :cache "http://mu.semte.ch/vocabularies/cache/"
   )
 
 
@@ -88,6 +89,13 @@
     -> "mu:uuid"
     -> "rdf:type"))
 
+(define-graph cache-clears ("http://mu.semte.ch/graphs/cache-clears")
+  ("cache:Clear"
+   -> "mu:uuid"
+   -> "rdf:type"
+   -> "cache:path"
+   -> "cache:allowedGroups"))
+
 ;;;;;;;;;;;;;
 ;; User roles
 
@@ -109,4 +117,9 @@
 (with-scope "service:push-updates-monitor"
   (grant (write)
          :to push-updates
+         :for "public"))
+
+(with-scope "service:cache"
+  (grant (write)
+         :to cache-clears
          :for "public"))
