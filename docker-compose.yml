@@ -57,6 +57,11 @@ services:
     environment:
       DEFAULT_MU_AUTH_SCOPE: "http://services.semantic.works/polling-push-updates"
 
+  push-update-resource-monitor:
+    image: redpencil/push-update-resource-monitor
+    environment:
+      DEFAULT_MU_AUTH_SCOPE: "http://services.semantic.works/push-updates-monitor"
+
   delta-notifier:
     image: semtech/mu-delta-notifier:0.4.0
     volumes:

@@ -27,6 +27,10 @@ defmodule Dispatcher do
     forward conn, path, "http://polling-push-update/"
   end
 
+  match "/resource-monitor/*path", @json do
+    forward conn, path, "http://push-update-resource-monitor/"
+  end
+
   match "/*path", %{ accept: %{ html: true }, layer: :fallback } do
     forward conn, [], "http://frontend/index.html"
   end

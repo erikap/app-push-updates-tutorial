@@ -29,5 +29,20 @@ export default [
       foldEffectiveChanges: false,
       ignoreFromSelf: false,
     },
+  },
+  {
+    match: {
+
+    },
+    callback: {
+      url: "http://push-update-resource-monitor/.mu/delta",
+      method: "POST",
+    },
+    options: {
+      resourceFormat: "v0.0.1",
+      gracePeriod: 100,
+      foldEffectiveChanges: false,
+      ignoreFromSelf: false,
+    },
   }
 ];

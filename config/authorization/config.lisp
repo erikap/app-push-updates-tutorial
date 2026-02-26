@@ -80,6 +80,14 @@
    -> "rdf:type"
    -> "rdf:label"))
 
+(define-graph push-updates ("http://mu.semte.ch/graphs/push-updates")
+  ("push:Update"
+    -> "push:target"
+    -> "push:message"
+    -> "push:channel"
+    -> "mu:uuid"
+    -> "rdf:type"))
+
 ;;;;;;;;;;;;;
 ;; User roles
 
@@ -96,4 +104,9 @@
 (with-scope "service:polling-push-updates"
   (grant (write)
          :to tab-ids
+         :for "public"))
+
+(with-scope "service:push-updates-monitor"
+  (grant (write)
+         :to push-updates
          :for "public"))
