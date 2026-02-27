@@ -123,3 +123,78 @@ docker compose up -d
 ```
 
 That's it. You have a real-time chat now.
+
+### Live updates of tasks
+For the list of tasks, we can add the same `@monitorCache` decorator to the `tasks.index` route to receive live updates on the tasks list.
+
+``` diff
+import Route from '@ember/routing/route';
+import { service } from '@ember/service';
++ import monitorCache from 'ember-polling-push-updates/decorators/monitor-cache';
+
++ @monitorCache("/tasks")
+export default class TasksIndexRoute extends Route {
+  @service store;
+
+  async model() {
+    return await this.store.query('task', {});
+  }
+}
+```
+
+In the backend, we have to update the `CACHE_CLEAR_NOTIFY_PATH_REGEX` environment variable on the `cache` service to inform mu-cache we're interested in cache invalidations for the `/tasks` path as well. Update `CACHE_CLEAR_NOTIFY_PATH_REGEX` in `docker-compose.yml`
+
+``` diff
+  cache:
+    image: semtech/mu-cache:2.1.0
+    links:
+      - resource:backend
+    environment:
+-     CACHE_CLEAR_NOTIFY_PATH_REGEX: "^/messages\\?sort="
++     CACHE_CLEAR_NOTIFY_PATH_REGEX: "^(/messages\\?sort=|/tasks)"
+```
+
+```shell
+cd app-push-updates-tutorial
+docker compose up -d
+```
+
+Cool, we have live updates on the task list now. Let's go one step further and add live updates on the detail view of a task.
+
+The ember-polling-push-updates addon offers another decorator `@monitorModelUri` which allows to subscribe easily to updates on a single model. We're going to add the decorator on the `tasks.show` route
+
+``` diff
+import Route from '@ember/routing/route';
+import { service } from '@ember/service';
++ import monitorModelUri from 'ember-polling-push-updates/decorators/monitor-model-uri';
+
++ @monitorModelUri
+export default class TasksShowRoute extends Route {
+  @service store;
+
+  async model({task_id}) {
+    return this.store.findRecord('task', task_id);
+  }
+}
+```
+
+That's it. These 2 lines are all we need to get live updates on a task while in the detail view.
+
+We can add the same decorator on the `tasks.edit` route
+
+``` diff
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
++ import monitorModelUri from 'ember-polling-push-updates/decorators/monitor-model-uri';
+
++ @monitorModelUri
+export default class TasksEditRoute extends Route {
+  @service store;
+
+  async model({task_id}) {
+    return await this.store.findRecord('task', task_id);
+  }
+}
+```
+
+And that's a wrap. You've leveled up our semantic.works stack with real-time push updates. No more sad polling loops or refresh-button mashing from now on. You're ready to boost your apps to be faster, smarter and more reactive.
