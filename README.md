@@ -15,7 +15,7 @@ cd ..
 git clone https://github.com/erikap/frontend-push-updates-tutorial.git
 cd frontend-push-updates-tutorial
 edi npm ci
-eds --proxy=http://localhost:4200
+eds --proxy=http://host:80
 ```
 
 When you first open the application, you can send chat messages and create new tasks. Nice! But try opening the app in two tabs side by side. You'll quickly spot the catch: nothing updates in real time. New chat messages? Task changes? They just sit there... invisible until you hit refresh. That's not very exciting. Let's fix that by wiring in push updates and make the app feel alive.
@@ -24,7 +24,7 @@ When you first open the application, you can send chat messages and create new t
 
 To enable push updates we will add three new services in the backend:
 1. **[polling-push-updates-service](https://github.com/mu-semtech/polling-push-updates-service)**: Core service that manages browser tab connections and delivers push messages via long-polling
-2. **[push-update-resource-monitor-service](https://github.com/redpencilio/push-update-resource-monitor-service)**: Monitors RDF triple patters clients have subscribed to and generates push updates for them
+2. **[push-update-resource-monitor-service](https://github.com/redpencilio/push-update-resource-monitor-service)**: Monitors RDF triple patterns clients have subscribed to and generates push updates for them
 3. **[push-update-cache-monitor-service](https://github.com/redpencilio/push-update-cache-monitor-service)**: Monitors cache clear events and generates push updates for them
 
 ### polling-push-updates-service
@@ -81,7 +81,7 @@ First, install the `ember-polling-push-updates` addon that will provide use with
 ``` shell
 cd frontend-push-updates-tutorial
 edi ember install ember-polling-push-updates
-eds --proxy=http://localhost:4200
+eds --proxy=http://host:80
 ```
 
 Next, open the `chat` route and decorate the class with `@monitorCache`. Pass the path we query the message from in the backend as argument. The decorator subscribes the route to push updates for the given path.
@@ -161,7 +161,7 @@ docker compose up -d
 
 Cool, we have live updates on the task list now. Let's go one step further and add live updates on the detail view of a task.
 
-The ember-polling-push-updates addon offers another decorator `@monitorModelUri` which allows to subscribe easily to updates on a single model. We're going to add the decorator on the `tasks.show` route
+The `ember-polling-push-updates` addon offers another decorator `@monitorModelUri` which allows to subscribe easily to updates on a single model. We're going to add the decorator on the `tasks.show` route
 
 ``` diff
 import Route from '@ember/routing/route';
@@ -197,4 +197,4 @@ export default class TasksEditRoute extends Route {
 }
 ```
 
-And that's a wrap. You've leveled up our semantic.works stack with real-time push updates. No more sad polling loops or refresh-button mashing from now on. You're ready to boost your apps to be faster, smarter and more reactive.
+And that's a wrap. You've leveled up our semantic.works stack with real-time push updates. No more sad polling loops or refresh-button mashing from now on. You're ready to boost your apps to be faster, smarter and more reactive 🚀
