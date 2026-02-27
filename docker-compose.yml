@@ -36,7 +36,7 @@ services:
     links:
       - resource:backend
     environment:
-      CACHE_CLEAR_NOTIFY_PATH_REGEX: "^/messages\\?sort="
+      CACHE_CLEAR_NOTIFY_PATH_REGEX: "^(/messages\\?sort=|/tasks)"
     labels:
       - "logging=true"
     logging: *default-logging
